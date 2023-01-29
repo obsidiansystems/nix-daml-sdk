@@ -1,9 +1,9 @@
 { lib, stdenv, jdk }:
 let 
-  version = "2.4.3";
+  version = "2.5.1";
   tarball = fetchTarball {
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-linux.tar.gz";
-    sha256 = "sha256:1m8mgmcmajq6v9bagmx74dxzh9sk19mylaz965a5199y3fpc90f2";
+    sha256 = "sha256:1n59rsi4i3mk0b7c0sxy0yvbr7xjqslcml1d7l5s210fzdbmankg";
   };
 in
   stdenv.mkDerivation {

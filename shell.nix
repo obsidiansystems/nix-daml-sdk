@@ -1,6 +1,6 @@
 { vimMode ? false }:
 let
-  rp = import ./reflex-platform {};
+  rp = import ./dep/reflex-platform {};
   pkgs = rp.nixpkgs;
   vscodeWithExtensions = pkgs.vscode-with-extensions.override {
     vscodeExtensions = with pkgs.vscode-extensions; [
@@ -17,7 +17,7 @@ in
   pkgs.mkShell {
     name = "daml-sdk";
     packages = [
-      (import ./. { inherit (pkgs) lib stdenv jdk; })
+      (import ./sdk.nix { inherit (pkgs) lib stdenv jdk; })
       vscodeWithExtensions
       pkgs.git
     ];
