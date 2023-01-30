@@ -1,4 +1,4 @@
-{ lib, stdenv, jdk, nodePackages }:
+{ lib, stdenv, jdk, nodePackages, nodejs }:
 let 
   version = "2.5.1";
   tarball = fetchTarball {
@@ -12,7 +12,7 @@ in
     src = tarball;
     buildPhase = "patchShebangs .";
     installPhase = "DAML_HOME=$out ./install.sh";
-    propagatedBuildInputs = [ jdk nodePackages.npm ];
+    propagatedBuildInputs = [ jdk nodePackages.npm nodejs ];
     meta = with lib; {
       description = "SDK for Daml smart contract language";
       homepage = "https://github.com/digital-asset/daml";
