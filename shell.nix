@@ -17,7 +17,7 @@ in
   pkgs.mkShell {
     name = "daml-sdk";
     packages = [
-      (import ./sdk.nix { inherit (pkgs) lib stdenv jdk; })
+      (import ./sdk.nix { inherit (pkgs) lib stdenv jdk nodePackages; })
       vscodeWithExtensions
       pkgs.git
     ];
