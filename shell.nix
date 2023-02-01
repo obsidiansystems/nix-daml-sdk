@@ -20,6 +20,6 @@ in
       (import ./sdk.nix { inherit (pkgs) lib stdenv jdk nodePackages nodejs; })
       vscodeWithExtensions
       pkgs.git
-      nodePackages.typescript-language-server
+      pkgs.nodePackages.typescript-language-server
     ];
   }
