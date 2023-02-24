@@ -1,4 +1,4 @@
-{ vimMode ? false }:
+{ vimMode ? false , extraPackages ? (_:[]) }:
 let
   rp = import ./dep/reflex-platform {};
   pkgs = rp.nixpkgs;
@@ -21,5 +21,5 @@ in
       vscodeWithExtensions
       pkgs.git
       pkgs.nodePackages.typescript-language-server
-    ];
+    ] ++ (extraPackages pkgs);
   }
