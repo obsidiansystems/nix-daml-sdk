@@ -8,8 +8,8 @@ let
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
-        version = "2.5.3";
-        sha256 = "sha256-zJPX9NTXN14Vnc112ZFlUY7IaD09VYENoGkpQZevyME=";
+        version = "2.6.1";
+        sha256 = "sha256-6k7eu2acWAALMDGSK/FFTWix0iEfWpZGvQrTazHGlyY=";
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
