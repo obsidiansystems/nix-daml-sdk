@@ -14,10 +14,13 @@ let
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
   sdk = import ./sdk.nix { inherit (pkgs) lib stdenv jdk nodePackages nodejs; };
-  packages = [
-      sdk
-      vscodeWithExtensions
+in {
+  sdk = sdk;
+  vscode = vscodeWithExtensions;
+  jdk = pkgs.jdk;
+  extra = [
       pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
-in packages
+  reflex-platform = rp;
+  }
