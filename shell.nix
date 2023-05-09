@@ -8,8 +8,8 @@ let
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
-        version = "2.6.1";
-        sha256 = "sha256-6k7eu2acWAALMDGSK/FFTWix0iEfWpZGvQrTazHGlyY=";
+        version = "2.6.4";
+        sha256 = "sha256-kU8yoQe4mjQqgVbrmucn/ucKaiU7HsrkF36dArzX8Tg=";
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
@@ -19,7 +19,7 @@ in
     packages = [
       (import ./sdk.nix { inherit (pkgs) lib stdenv jdk nodePackages nodejs; })
       vscodeWithExtensions
-      pkgs.git
+      pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
   }

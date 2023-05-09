@@ -1,9 +1,9 @@
 { lib, stdenv, jdk, nodePackages, nodejs }:
 let 
-  version = "2.6.1";
+  version = "2.6.4";
   tarball = fetchTarball {
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-linux.tar.gz";
-    sha256 = "sha256:0w0z3m8p470gyas4f8bxl8yw8733ip752lw9vkhzjzsaj4picql4";
+    sha256 = "sha256:1cxv1plv6jn83ngv110z76ppngvmvxhj2sn85jqfm3viry66rjab";
   };
 in
   stdenv.mkDerivation {
