@@ -1,7 +1,9 @@
-{ vimMode ? false , extraPackages ? (_:[]) }:
+{ vimMode ? false , extraPackages ? (_:[])
+, system ? builtins.currentSystem
+}:
 let
-  pkgs = (import ./dep/reflex-platform {}).nixpkgs;
-  damlPkgs = import ./default.nix { inherit vimMode extraPackages; };
+  pkgs = damlPkgs.pkgs;
+  damlPkgs = import ./default.nix { inherit vimMode extraPackages system; };
 in
   pkgs.mkShell {
     name = "daml-sdk";
