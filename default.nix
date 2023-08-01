@@ -1,7 +1,11 @@
-{ vimMode ? false , extraPackages ? (_:[]) }:
+{ vimMode ? false , extraPackages ? (_:[])
+, system ? builtins.currentSystem
+}:
 let
-  rp = import ./dep/reflex-platform {};
-  pkgs = rp.nixpkgs;
+  pkgs = import ./dep/nixpkgs {
+    inherit system;
+    config = { allowUnfree = true; };
+  };
   vscodeWithExtensions = pkgs.vscode-with-extensions.override {
     vscodeExtensions = with pkgs.vscode-extensions; [
       haskell.haskell
@@ -22,5 +26,5 @@ in {
       pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
-  reflex-platform = rp;
+  inherit pkgs;
   }
