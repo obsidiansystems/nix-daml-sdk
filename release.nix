@@ -15,4 +15,4 @@ let
     project-with-vim = project (args // { vimMode = true; });
   });
 
-in lib.recurseIntoAttrs perPlatform
+in lib.mapAttrs (_: lib.recurseIntoAttrs) perPlatform
