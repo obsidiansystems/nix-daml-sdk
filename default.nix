@@ -1,5 +1,6 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
+, jdkVersion ? "jdk"
 }:
 let
   pkgs = import ./dep/nixpkgs {
@@ -17,11 +18,14 @@ let
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
-  sdk = import ./sdk.nix { inherit (pkgs) lib stdenv jdk nodePackages nodejs; };
+  sdk = import ./sdk.nix {
+    inherit (pkgs) lib stdenv nodePackages nodejs;
+    jdk = pkgs.${jdkVersion};
+  };
 in {
   sdk = sdk;
   vscode = vscodeWithExtensions;
-  jdk = pkgs.jdk;
+  jdk = pkgs.${jdkVersion};
   extra = [
       pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
