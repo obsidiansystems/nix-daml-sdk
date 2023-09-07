@@ -29,7 +29,7 @@ let
     inherit pkgs jdkVersion;
     useEnterprise = true;
   };
-in {
+in rec {
   inherit sdk canton canton-enterprise;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
@@ -38,4 +38,11 @@ in {
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
   inherit pkgs;
-  }
+  shell = pkgs.mkShell {
+    name = "daml-sdk";
+    packages = [
+      sdk
+      vscode
+    ] ++ extra;
+  };
+}
