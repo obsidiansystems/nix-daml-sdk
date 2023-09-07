@@ -22,8 +22,15 @@ let
     inherit (pkgs) lib stdenv nodePackages nodejs;
     jdk = pkgs.${jdkVersion};
   };
+  canton = import ./canton.nix {
+    inherit pkgs jdkVersion;
+  };
+  canton-enterprise = import ./canton.nix {
+    inherit pkgs jdkVersion;
+    useEnterprise = true;
+  };
 in {
-  sdk = sdk;
+  inherit sdk canton canton-enterprise;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
