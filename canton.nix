@@ -6,16 +6,19 @@
     sha256 = "111ffm8a4n6jgaw7h83q15z128ixxs66768y1103jqv7pql7jrm3";
   }
 }:
+let
+  jdk = pkgs.${jdkVersion};
+in
 pkgs.stdenvNoCC.mkDerivation {
   name = "canton-${version.type}-${version.number}";
   src = builtins.fetchurl cantonSource;
   nativeBuildInputs = [pkgs.makeWrapper];
-  buildInputs = [pkgs.openjdk];
+  buildInputs = [jdk];
   installPhase = ''
     mkdir -p $out/bin
     mkdir -p $out/lib
     cp bin/canton $out/bin
-    makeWrapper ${pkgs.openjdk}/bin/java $out/bin/canton
+    makeWrapper ${jdk}/bin/java $out/bin/canton
     cp -r lib/* $out/lib/
   '';
 }
