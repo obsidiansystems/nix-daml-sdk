@@ -1,6 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
+, cantonVersion ? { type = "open-source"; number = "2.5.5"; }
 }:
 let
   pkgs = import ./dep/nixpkgs {
@@ -22,8 +23,12 @@ let
     inherit (pkgs) lib stdenv nodePackages nodejs;
     jdk = pkgs.${jdkVersion};
   };
-in {
-  sdk = sdk;
+  canton = import ./canton.nix {
+    inherit pkgs jdkVersion;
+    version = cantonVersion;
+  };
+in rec {
+  inherit sdk canton;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
@@ -31,4 +36,11 @@ in {
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
   inherit pkgs;
-  }
+  shell = pkgs.mkShell {
+    name = "daml-sdk";
+    packages = [
+      sdk
+      vscode
+    ] ++ extra;
+  };
+}
