@@ -1,19 +1,19 @@
 { pkgs
 , jdkVersion ? "jdk"
-, version ? { type = "open-source"; number = "2.5.5"; }
-, useEnterprise ? false
+, version ? { type = "open-source"; number = "2.6.4"; }
 , cantonSource ? {
     url = "https://github.com/digital-asset/daml/releases/download/v${version.number}/canton-open-source-${version.number}.tar.gz";
-    sha256 = "111ffm8a4n6jgaw7h83q15z128ixxs66768y1103jqv7pql7jrm3";
+    sha256 = "sha256:0acj4gaz0lml1h7qgxp3772zmqlvx72mrl7q7lsqin3fnahfs7l6";
   }
 , cantonEnterpriseTarball ? pkgs.requireFile {
     name = "canton-enterprise-${version.number}.tar.gz";
     url = "https://digitalasset.jfrog.io/artifactory/canton-enterprise/canton-enterprise-${version.number}.tar.gz";
-    sha256 = "00kisb6pygbqk6y3klzpff06myh44nyw95y7znn7y5v09zb8asxi";
+    sha256 = "sha256:0ywh5xghjwv855g1y19z41b881b42s35grc82mzsd3s0xyhkfbgj";
   }
 }:
 let
   jdk = pkgs.${jdkVersion};
+  useEnterprise = version.type == "enterprise";
 in
 pkgs.stdenvNoCC.mkDerivation {
   name = "canton-${version.type}-${version.number}";

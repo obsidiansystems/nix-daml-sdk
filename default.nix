@@ -1,7 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
-, cantonVersion ? { type = "open-source"; number = "2.5.5"; }
+, cantonVersion ? { type = "open-source"; number = "2.6.4"; }
 }:
 let
   pkgs = import ./dep/nixpkgs {

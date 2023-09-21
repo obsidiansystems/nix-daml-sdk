@@ -1,14 +1,14 @@
 { lib, stdenv, jdk, nodePackages, nodejs }:
 let
-  version = "2.5.5";
+  version = "2.6.4";
   tarball = if stdenv.isDarwin then macos-tarball else linux-tarball;
   linux-tarball = fetchTarball {
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-linux.tar.gz";
-    sha256 = "sha256:15q2njifg3bz4iiffn85zjanr34zl4d2zvqjs5nhk3r8wlw79jbn";
+    sha256 = "sha256:1cxv1plv6jn83ngv110z76ppngvmvxhj2sn85jqfm3viry66rjab";
   };
   macos-tarball = fetchTarball {
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-macos.tar.gz";
-    sha256 = "sha256:0jbmxd9v40x9fwhm6499gba34a4hykbkffwl41bvxcb1y5al3hfq";
+    sha256 = "sha256:0fxw53aiqkq20z179p5i4a1zd0myq0vkvfp1k7hfnws2v6615ss6";
   };
 in
   stdenv.mkDerivation {
