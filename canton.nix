@@ -12,11 +12,14 @@
     sha256 = "00kisb6pygbqk6y3klzpff06myh44nyw95y7znn7y5v09zb8asxi";
   }
 }:
+let
+  jdk = pkgs.${jdkVersion};
+in
 pkgs.stdenvNoCC.mkDerivation {
   name = "canton-${version.type}-${version.number}";
   src = if useEnterprise then cantonEnterpriseTarball else builtins.fetchurl cantonSource;
   nativeBuildInputs = [pkgs.makeWrapper];
-  buildInputs = [pkgs.${jdkVersion}];
+  buildInputs = [jdk];
   installPhase = "mkdir -p $out; cp -r * $out";
   preFixup = ''
     # Set CANTON_HOME automatically.
