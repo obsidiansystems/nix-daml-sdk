@@ -1,6 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
+, cantonVersion ? { type = "open-source"; number = "2.5.5"; }
 }:
 let
   pkgs = import ./dep/nixpkgs {
@@ -24,13 +25,10 @@ let
   };
   canton = import ./canton.nix {
     inherit pkgs jdkVersion;
-  };
-  canton-enterprise = import ./canton.nix {
-    inherit pkgs jdkVersion;
-    useEnterprise = true;
+    version = cantonVersion;
   };
 in rec {
-  inherit sdk canton canton-enterprise;
+  inherit sdk canton;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
