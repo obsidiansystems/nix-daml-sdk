@@ -6,7 +6,6 @@
 , cantonEnterprise ? false
 }:
 let
-  sdkVersion = sdkSpec.sdk;
   cantonVersion = if cantonEnterprise then sdkSpec.cantonEnterprise else sdkSpec.canton;
   pkgs = import ./dep/nixpkgs {
     inherit system;
@@ -18,19 +17,19 @@ let
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
-        version = sdkVersion.number;
-        sha256 = sdkVersion.extensionSha256;
+        version = sdkVersion;
+        sha256 = sdkSpec.sdk.extensionSha256;
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
   sdk = import ./sdk.nix {
     inherit (pkgs) lib stdenv nodePackages nodejs;
     jdk = pkgs.${jdkVersion};
-    inherit sdkVersion;
+    sdkSpec = sdkSpec.sdk // { number = sdkVersion; };
   };
   canton = import ./canton.nix {
     inherit pkgs jdkVersion;
-    version = cantonVersion;
+    version = cantonVersion // { number = sdkVersion; };
   };
 in rec {
   inherit sdk canton;
