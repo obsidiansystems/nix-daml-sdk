@@ -1,7 +1,8 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
-, sdkSpec ? builtins.fromJSON(builtins.readFile ./versions/2.6.4.json)
+, sdkVersion ? "2.6.4"
+, sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
 }:
 let
