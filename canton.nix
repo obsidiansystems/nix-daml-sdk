@@ -1,14 +1,14 @@
 { pkgs
 , jdkVersion ? "jdk"
-, version ? { type = "open-source"; number = "2.6.4"; }
+, version
 , cantonSource ? {
     url = "https://github.com/digital-asset/daml/releases/download/v${version.number}/canton-open-source-${version.number}.tar.gz";
-    sha256 = "sha256:0acj4gaz0lml1h7qgxp3772zmqlvx72mrl7q7lsqin3fnahfs7l6";
+    inherit (version) sha256;
   }
 , cantonEnterpriseTarball ? pkgs.requireFile {
     name = "canton-enterprise-${version.number}.tar.gz";
     url = "https://digitalasset.jfrog.io/artifactory/canton-enterprise/canton-enterprise-${version.number}.tar.gz";
-    sha256 = "sha256:0ywh5xghjwv855g1y19z41b881b42s35grc82mzsd3s0xyhkfbgj";
+    inherit (version) sha256;
   }
 }:
 let
