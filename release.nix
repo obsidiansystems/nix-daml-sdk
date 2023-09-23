@@ -16,6 +16,9 @@ let
     in lib.mapAttrs (_: lib.recurseIntoAttrs) {
       project = project args;
       project-with-vim = project (args // { vimMode = true; });
+      project_255 = project (args // { sdkVersion = "2.5.5"; });
+      project_264 = project (args // { sdkVersion = "2.6.4"; });
+      project_265 = project (args // { sdkVersion = "2.6.5"; });
     });
 
     in lib.mapAttrs (_: lib.recurseIntoAttrs) perJdk
