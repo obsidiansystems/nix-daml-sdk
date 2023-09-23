@@ -19,6 +19,7 @@ let
       project_255 = project (args // { sdkVersion = "2.5.5"; });
       project_264 = project (args // { sdkVersion = "2.6.4"; });
       project_265 = project (args // { sdkVersion = "2.6.5"; });
+      project_271 = project (args // { sdkVersion = "2.7.1"; });
     });
 
     in lib.mapAttrs (_: lib.recurseIntoAttrs) perJdk
