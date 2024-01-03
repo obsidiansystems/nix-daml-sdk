@@ -22,12 +22,12 @@ let
       project_271 = project (args // { sdkVersion = "2.7.1"; });
     });
 
-    in lib.mapAttrs (_: lib.recurseIntoAttrs) perJdk // {
+    in lib.mapAttrs (_: lib.recurseIntoAttrs) (perJdk // {
       ghc-shell = let pkgs = (project { inherit system; }).pkgs; in pkgs.mkShell {
         buildInputs = [
 	        (pkgs.haskell.packages.ghc8107.ghcWithPackages(hs: with hs; [ http-conduit async optparse-applicative xml HsYAML ansi-terminal ]))
         ];
       };
-    }
+    })
   );
 in lib.mapAttrs (_: lib.recurseIntoAttrs) allVersions
