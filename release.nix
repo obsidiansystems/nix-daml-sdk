@@ -25,7 +25,7 @@ let
     in lib.mapAttrs (_: lib.recurseIntoAttrs) perJdk // {
       ghc-shell = let pkgs = (project { inherit system; }).pkgs; in pkgs.mkShell {
         buildInputs = [
-	        (pkgs.haskell.packages.ghc8107.ghcWithPackages(hs: with hs; [ http-conduit async optparse-applicative ]))
+	        (pkgs.haskell.packages.ghc8107.ghcWithPackages(hs: with hs; [ http-conduit async optparse-applicative xml HsYAML ansi-terminal ]))
         ];
       };
     }
