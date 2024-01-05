@@ -12,13 +12,16 @@ let
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-macos.tar.gz";
     sha256 = sdkSpec.macSha256;
   };
+  extra-args = if version == "2.8.0" then "--install-with-custom-version ${version}" else "";
 in
   stdenv.mkDerivation {
     inherit version;
     name = "daml-sdk";
     src = tarball;
     buildPhase = "patchShebangs .";
-    installPhase = "DAML_HOME=$out ./install.sh";
+    installPhase = ''
+      DAML_HOME=$out PATH=$out/bin:$PATH ./install.sh ${extra-args}
+    '';
     propagatedBuildInputs = [ jdk nodePackages.npm nodejs ];
     meta = with lib; {
       description = "SDK for Daml smart contract language";
