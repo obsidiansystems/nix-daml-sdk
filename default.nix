@@ -45,6 +45,7 @@ in rec {
     packages = [
       sdk
       vscode
+      canton
     ] ++ extra;
   };
 }
