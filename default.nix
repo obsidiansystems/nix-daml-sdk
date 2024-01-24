@@ -23,7 +23,7 @@ let
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
   sdk = import ./sdk.nix {
-    inherit (pkgs) lib stdenv nodePackages nodejs;
+    inherit (pkgs) lib stdenv nodePackages nodejs makeWrapper coreutils;
     jdk = pkgs.${jdkVersion};
     sdkSpec = sdkSpec.sdk // { number = sdkVersion; };
   };
