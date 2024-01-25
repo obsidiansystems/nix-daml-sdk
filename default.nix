@@ -33,10 +33,11 @@ let
     inherit pkgs jdkVersion;
     version = cantonVersion // { number = sdkVersion; };
   };
-  scribe = import ./scribe.nix {
-    inherit pkgs jdkVersion;
-    version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
-  };
+  scribe = if enableScribe
+    then import ./scribe.nix {
+      inherit pkgs jdkVersion;
+      version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
+    } else null;
 in rec {
   inherit sdk canton scribe;
   vscode = vscodeWithExtensions;
