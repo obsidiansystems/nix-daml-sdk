@@ -2,8 +2,10 @@
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
 , sdkVersion ? "2.6.4"
+, scribeVersion ? "0.1.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
+, enableScribe ? false
 }:
 let
   cantonVersion = if cantonEnterprise then sdkSpec.cantonEnterprise else sdkSpec.canton;
@@ -31,8 +33,13 @@ let
     inherit pkgs jdkVersion;
     version = cantonVersion // { number = sdkVersion; };
   };
+  scribe = if enableScribe
+    then import ./scribe.nix {
+      inherit pkgs jdkVersion;
+      version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
+    } else null;
 in rec {
-  inherit sdk canton;
+  inherit sdk canton scribe;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
@@ -46,6 +53,7 @@ in rec {
       sdk
       vscode
       canton
-    ] ++ extra;
+    ] ++ (pkgs.lib.optional (enableScribe) scribe)
+      ++ extra;
   };
 }

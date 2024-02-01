@@ -14,6 +14,7 @@ let
     url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-macos.tar.gz";
     sha256 = sdkSpec.macSha256;
   };
+  extra-args = if version == "2.8.0" then "--install-with-custom-version ${version}" else "";
 in
   stdenv.mkDerivation {
     inherit version;
