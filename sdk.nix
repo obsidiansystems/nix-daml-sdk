@@ -22,7 +22,7 @@ in
     src = tarball;
     buildPhase = "patchShebangs .";
     installPhase = ''
-      DAML_HOME=$out ./install.sh
+      DAML_HOME=$out ./install.sh ${extra-args}
       wrapProgram $out/bin/daml \
         --set PATH ${lib.makeBinPath [ jdk coreutils ]}
     '';
