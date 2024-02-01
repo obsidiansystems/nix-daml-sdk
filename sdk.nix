@@ -1,5 +1,7 @@
 { lib, stdenv, jdk, nodePackages, nodejs
 , sdkSpec
+, makeWrapper
+, coreutils
 }:
 let
   version = sdkSpec.number;
@@ -20,8 +22,11 @@ in
     src = tarball;
     buildPhase = "patchShebangs .";
     installPhase = ''
-      DAML_HOME=$out PATH=$out/bin:$PATH ./install.sh ${extra-args}
+      DAML_HOME=$out ./install.sh ${extra-args}
+      wrapProgram $out/bin/daml \
+        --set PATH ${lib.makeBinPath [ jdk coreutils ]}
     '';
+    nativeBuildInputs = [ makeWrapper ];
     propagatedBuildInputs = [ jdk nodePackages.npm nodejs ];
     meta = with lib; {
       description = "SDK for Daml smart contract language";
