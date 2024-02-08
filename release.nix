@@ -1,5 +1,5 @@
 { project ? import ./.
-, supportedSystems ? ["x86_64-linux" "x86_64-darwin"]
+, supportedSystems ? ["x86_64-linux" "x86_64-darwin" "aarch64-darwin" ]
 , jdks ? ["jdk" "jdk17" "jdk19"]
 }:
 let
