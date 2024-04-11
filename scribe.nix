@@ -11,7 +11,12 @@
 in let
   scribe = pkgs.stdenvNoCC.mkDerivation {
     name = "scribe-${version.number}";
-    src = scribeSource;
+    src = if version == "v0.1.0"
+             then scribeSource
+             else pkgs.runCommandNoCC "unpack-scribe" {} ''
+              mkdir -p $out
+              tar xvf ${scribeSource} -C $out
+             '';
     nativeBuildInputs = [
       pkgs.makeWrapper
     ];
