@@ -40,6 +40,7 @@ let
     } else null;
 in rec {
   inherit sdk canton scribe;
+  daml-upgrade = import ./upgrade.nix { inherit pkgs jdkVersion; };
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
