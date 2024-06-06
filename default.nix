@@ -3,6 +3,7 @@
 , jdkVersion ? "jdk"
 , sdkVersion ? "2.6.4"
 , scribeVersion ? "0.1.0"
+, upgradeVersion ? "2.5.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
 , enableScribe ? false
@@ -40,7 +41,10 @@ let
     } else null;
 in rec {
   inherit sdk canton scribe;
-  daml-upgrade = import ./upgrade.nix { inherit pkgs jdkVersion; };
+  daml-upgrade = import ./upgrade.nix {
+    inherit pkgs jdkVersion;
+    version = (import (./daml-upgrade-versions + "/${upgradeVersion}.nix")) // { number = upgradeVersion; };
+  };
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
