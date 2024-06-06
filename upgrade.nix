@@ -1,6 +1,6 @@
 { pkgs
 , jdkVersion ? "jdk"
-, version ? { number = "2.1.0"; sha256 = "0lgzawnmrmlkp4jxgy7cs7v7v88p6kb2r9jm9g372rm75nfzxgxk"; }
+, version
 }:
 let
   daml-upgrade-source = pkgs.requireFile {
@@ -21,6 +21,7 @@ in pkgs.stdenv.mkDerivation {
   unpackPhase = ''
     tar xvf $src
   '';
+  # Loop through docker layers, unpack them, take what we want
   buildPhase = ''
     for i in $(dir); do
      if [[ -d $i ]]; then
