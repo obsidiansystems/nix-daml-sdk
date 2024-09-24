@@ -18,7 +18,7 @@
         config.allowUnfree = true;
       };
       sdkSpec = builtins.fromJSON (builtins.readFile (./versions + "/${sdkVersion}.json"));
-      daml-sdk-vscode-extension = pkgs.vscode-utils.extensionFromVscodeMarketplace {
+      daml-vscode-extension = pkgs.vscode-utils.extensionFromVscodeMarketplace {
         name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
         version = sdkVersion;
@@ -27,7 +27,7 @@
       vscode = pkgs.vscode-with-extensions.override {
         vscodeExtensions = with pkgs.vscode-extensions; [
           haskell.haskell
-          daml-sdk-vscode-extension
+          daml-vscode-extension
         ];
       };
       jdk = pkgs.${jdkVersion};
@@ -57,7 +57,7 @@
           jdk
           vscode
           canton
-          daml-sdk-vscode-extension
+          daml-vscode-extension
           ;
       };
 
