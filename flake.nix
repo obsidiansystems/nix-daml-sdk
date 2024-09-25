@@ -78,7 +78,7 @@
               description = "Enable DAML SDK";
             };
             version = lib.mkOption {
-              type = string;
+              type = str;
               default = "2.6.5";
               description = "Version of the DAML SDK";
             };
