@@ -13,12 +13,17 @@
     let
       sdkVersion = "2.8.0";
       jdkVersion = "jdk";
+      scribeVersion = "0.1.1";
+
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
       };
+
+      jdk = pkgs.${jdkVersion};
       sdkSpec = builtins.fromJSON (builtins.readFile (./versions + "/${sdkVersion}.json"));
-      daml-vscode-extension = pkgs.vscode-utils.extensionFromVscodeMarketplace {
+
+      vscode-extension = pkgs.vscode-utils.extensionFromVscodeMarketplace {
         name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
         version = sdkVersion;
@@ -27,10 +32,10 @@
       vscode = pkgs.vscode-with-extensions.override {
         vscodeExtensions = with pkgs.vscode-extensions; [
           haskell.haskell
-          daml-vscode-extension
+          vscode-extension
         ];
       };
-      jdk = pkgs.${jdkVersion};
+
       daml-sdk = import ./sdk.nix {
         inherit (pkgs)
           lib
@@ -43,32 +48,48 @@
           number = sdkVersion;
         };
       };
-      canton = import ./canton.nix {
+
+      canton-free = import ./canton.nix {
         inherit pkgs jdkVersion;
         version = sdkSpec.canton // {
           number = sdkVersion;
         };
       };
+      canton-enterprise = import ./canton.nix {
+        inherit pkgs jdkVersion;
+        version = sdkSpec.cantonEnterprise // {
+          number = sdkVersion;
+        };
+      };
+
+      scribe = import ./scribe.nix {
+        inherit pkgs jdkVersion;
+        version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
+      };
     in
     {
       packages."x86_64-linux" = {
         inherit
-          daml-sdk
           jdk
           vscode
-          canton
-          daml-vscode-extension
+          canton-free
+          canton-enterprise
+          scribe
+          daml-sdk
           ;
+        vscode-extensions.DigitalAssetHoldingsLLC.daml = vscode-extension;
+        default = daml-sdk;
       };
 
       devShells."x86_64-linux".default = pkgs.mkShell {
         name = "DAML";
         packages = [
-          daml-sdk
-          vscode
-          canton
+          pkgs.bashInteractive
           pkgs.gitFull
           pkgs.nodePackages.typescript-language-server
+          canton-free
+          daml-sdk
+          vscode
         ];
       };
 
