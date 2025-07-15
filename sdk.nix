@@ -1,15 +1,17 @@
 { lib, stdenv, jdk, nodePackages, nodejs
 , sdkSpec
+, foo ? "3.3.0-snapshot.20250528.13806.0.v3cd439fb"
 }:
 let
   version = sdkSpec.number;
+  rev = if sdkSpec ? rev then ".sdkSpec.rev" else "";
   tarball = if stdenv.isDarwin then macos-tarball else linux-tarball;
   linux-tarball = fetchTarball {
-    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-linux.tar.gz";
+    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${foo}-linux.tar.gz";
     sha256 = sdkSpec.linuxSha256;
   };
   macos-tarball = fetchTarball {
-    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${version}-macos.tar.gz";
+    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${foo}-macos.tar.gz";
     sha256 = sdkSpec.macSha256;
   };
 in
