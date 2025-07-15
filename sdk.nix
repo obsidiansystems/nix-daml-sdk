@@ -1,22 +1,21 @@
 { lib, stdenv, jdk, nodePackages, nodejs
 , sdkSpec
-, foo ? "3.3.0-snapshot.20250528.13806.0.v3cd439fb"
 }:
 let
-  version = sdkSpec.number;
-  rev = if sdkSpec ? rev then ".sdkSpec.rev" else "";
+  release-version = sdkSpec.number;
+  sdk-version = if sdkSpec ? sdk-version then sdkSpec.sdk-version else release-version;
   tarball = if stdenv.isDarwin then macos-tarball else linux-tarball;
   linux-tarball = fetchTarball {
-    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${foo}-linux.tar.gz";
+    url = "https://github.com/digital-asset/daml/releases/download/v${release-version}/daml-sdk-${sdk-version}-linux.tar.gz";
     sha256 = sdkSpec.linuxSha256;
   };
   macos-tarball = fetchTarball {
-    url = "https://github.com/digital-asset/daml/releases/download/v${version}/daml-sdk-${foo}-macos.tar.gz";
+    url = "https://github.com/digital-asset/daml/releases/download/v${release-version}/daml-sdk-${sdk-version}-macos.tar.gz";
     sha256 = sdkSpec.macSha256;
   };
 in
   stdenv.mkDerivation {
-    inherit version;
+    version = release-version;
     name = "daml-sdk";
     src = tarball;
     buildPhase = "patchShebangs .";
