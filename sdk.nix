@@ -19,7 +19,10 @@ in
     name = "daml-sdk";
     src = tarball;
     buildPhase = "patchShebangs .";
-    installPhase = "DAML_HOME=$out ./install.sh";
+    installPhase = ''
+      DAML_HOME=$out ./install.sh
+      sed -i "s/auto-install: true/auto-install: false/" $out/daml-config.yaml
+    '';
     propagatedBuildInputs = [ jdk nodePackages.npm nodejs ];
     meta = with lib; {
       description = "SDK for Daml smart contract language";
