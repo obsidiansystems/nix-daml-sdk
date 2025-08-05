@@ -10,7 +10,7 @@ let
     sha256 = sdkSpec.linuxSha256;
   };
   macos-tarball = fetchTarball {
-    url = "https://github.com/digital-asset/daml/releases/download/v${release-version}/daml-sdk-${sdk-version}-macos.tar.gz";
+    url = "https://github.com/digital-asset/daml/releases/download/v${release-version}/daml-sdk-${sdk-version}-macos-x86_64.tar.gz";
     sha256 = sdkSpec.macSha256;
   };
 in
