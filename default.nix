@@ -1,7 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
-, sdkVersion ? "2.6.4"
+, sdkVersion ? "3.4.10"
 , scribeVersion ? "0.1.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
