@@ -64,9 +64,9 @@ in rec {
     packages = [
       vscode
       canton
-    ] ++ (pkgs.lib.optional (sdk != null) [sdk])
-      ++ (pkgs.lib.optional (dpm != null) [dpm])
-      ++ (pkgs.lib.optional (enableScribe) scribe)
+      sdk
+      dpm
+    ] ++ (pkgs.lib.optional (enableScribe) scribe)
       ++ extra;
   };
 }
