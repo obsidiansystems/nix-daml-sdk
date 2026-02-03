@@ -1,7 +1,9 @@
 { "sdk":
   { "linuxSha256": "sha256:0fsajsghgawwh4ccxz9rak80p8axlsbs2pj8269hkn6afy7k1z6i",
-    "macSha256": "sha256:0cwchp256i2carp721a2cyqzganqcg3ahzqk0ia4kf4hfrqycc6q",
-    "extensionSha256": "sha256-VL+xYC9KOjQ8EtbkDqa/3+e8o0Bq391a4tDvLO440ug="
+    "macSha256": "sha256:0cwchp256i2carp721a2cyqzganqcg3ahzqk0ia4kf4hfrqycc6q"
+  },
+  "vscodeExtension":
+  { "sha256": "sha256-VL+xYC9KOjQ8EtbkDqa/3+e8o0Bq391a4tDvLO440ug="
   },
   "canton":
   { "type": "open-source",
