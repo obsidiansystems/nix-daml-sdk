@@ -1,6 +1,6 @@
 { "sdk":
   { "linuxSha256": "sha256:01kh34yixjnbipvh1l7r8pn605nb784zpkg5y6whzyb4972gl20h",
-    "macSha256": "",
+    "macSha256": "sha256:07s3sj8s3vhnvf1swsxf0yqc9vvhg8i1rj5hvccxxy4cj6qjqys9",
     "extensionSha256": "sha256-c9jy3ymZQt65+K6TpwcBDQeFifGlG3Hl221hwGR+Vwg="
   },
   "canton":
