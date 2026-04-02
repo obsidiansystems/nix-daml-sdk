@@ -1,4 +1,4 @@
-{ lib, stdenv, jdk, nodePackages, nodejs
+{ lib, stdenv, jdk, nodePackages, nodejs, bash
 , sdkSpec
 , makeWrapper
 , coreutils
@@ -24,7 +24,7 @@ in
     installPhase = ''
       DAML_HOME=$out ./install.sh ${extra-args}
       wrapProgram $out/bin/daml \
-        --set PATH ${lib.makeBinPath [ jdk coreutils ]}
+        --set PATH ${lib.makeBinPath [ jdk bash coreutils ]}
     '';
     nativeBuildInputs = [ makeWrapper ];
     propagatedBuildInputs = [ jdk nodePackages.npm nodejs ];
