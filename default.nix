@@ -19,7 +19,7 @@ let
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
-        version = sdkVersion;
+        version = if sdkVersion == "2.10.3" then "2.10.1" else sdkVersion;
         sha256 = sdkSpec.sdk.extensionSha256;
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;

@@ -1,0 +1,14 @@
+{ "sdk":
+  { "linuxSha256": "sha256:0ja6d8bhrrzgljmwj4wqlmahga9dzrfzjhbg2pdlw2m8q4jhalhi",
+    "macSha256": "",
+    "extensionSha256": "sha256-c9jy3ymZQt65+K6TpwcBDQeFifGlG3Hl221hwGR+Vwg="
+  },
+  "canton":
+  { "type": "open-source",
+   "sha256": "sha256:0qv2n5rg60378n3ygig5ijzwn8jwkkqya1d2xns6apacr3qxp8ks"
+  },
+  "cantonEnterprise":
+  { "type": "enterprise",
+    "sha256": ""
+  }
+}
