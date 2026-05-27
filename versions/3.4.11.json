@@ -1,4 +1,10 @@
-{ "sdk":
+{ "vscodeExtension":
+  { "sha256": "sha256-1C6iPVD/tsUqK6EsYh6TK0Xx2yLA2DAiTAy7sHkn0h4="
+  },
+  "dpm":
+  { "linuxSha256": "1la23ax4vg3qkwhhd8i1y38nxkkwh4l9z8cc3pwiqm9c7ndpswid"
+  },
+  "sdk":
   { "linuxSha256": "0ja8jijdywj58wdblq0amhhndvb4cbc57896rz1gcs6nrl92lr5j",
     "macSha256": "",
     "extensionSha256": "",
@@ -6,7 +12,7 @@
   },
   "canton":
   { "type": "open-source",
-   "sha256": ""
+   "sha256": "1nwfwdb6waim5rs8c2bn35a3ddbr5rwdj8yajjyvr1wdfcx33vbp"
   },
   "cantonEnterprise":
   { "type": "enterprise",
