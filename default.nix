@@ -1,9 +1,11 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
-, sdkVersion ? "2.6.4"
+, sdkVersion ? "3.4.10"
+, scribeVersion ? "0.1.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
+, enableScribe ? false
 }:
 let
   cantonVersion = if cantonEnterprise then sdkSpec.cantonEnterprise else sdkSpec.canton;
@@ -18,21 +20,38 @@ let
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
         version = sdkVersion;
-        sha256 = sdkSpec.sdk.extensionSha256;
+        sha256 = sdkSpec.vscodeExtension.sha256;
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
   };
-  sdk = import ./sdk.nix {
-    inherit (pkgs) lib stdenv nodePackages nodejs;
-    jdk = pkgs.${jdkVersion};
-    sdkSpec = sdkSpec.sdk // { number = sdkVersion; };
-  };
+  sdk =
+    if builtins.hasAttr "sdk" sdkSpec
+    then import ./sdk.nix {
+      inherit (pkgs) lib stdenv nodePackages nodejs makeWrapper coreutils bash;
+      jdk = pkgs.${jdkVersion};
+      sdkSpec = sdkSpec.sdk // { number = sdkVersion; };
+    }
+    else null;
+  dpm =
+    if builtins.hasAttr "dpm" sdkSpec
+    then import ./dpm.nix {
+      inherit system;
+      inherit (pkgs) lib stdenv;
+      version = sdkVersion;
+      dpmSpec = sdkSpec.dpm;
+    }
+    else null;
   canton = import ./canton.nix {
     inherit pkgs jdkVersion;
     version = cantonVersion // { number = sdkVersion; };
   };
+  scribe = if enableScribe
+    then import ./scribe.nix {
+      inherit pkgs jdkVersion;
+      version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
+    } else null;
 in rec {
-  inherit sdk canton;
+  inherit sdk canton scribe dpm;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
@@ -43,9 +62,11 @@ in rec {
   shell = pkgs.mkShell {
     name = "daml-sdk";
     packages = [
-      sdk
       vscode
       canton
-    ] ++ extra;
+      sdk
+      dpm
+    ] ++ (pkgs.lib.optional (enableScribe) scribe)
+      ++ extra;
   };
 }
