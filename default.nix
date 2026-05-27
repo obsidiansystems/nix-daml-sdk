@@ -27,7 +27,7 @@ let
   sdk =
     if builtins.hasAttr "sdk" sdkSpec
     then import ./sdk.nix {
-      inherit (pkgs) lib stdenv nodePackages nodejs makeWrapper coreutils;
+      inherit (pkgs) lib stdenv nodePackages nodejs makeWrapper coreutils bash;
       jdk = pkgs.${jdkVersion};
       sdkSpec = sdkSpec.sdk // { number = sdkVersion; };
     }
