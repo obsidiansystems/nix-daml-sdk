@@ -1,16 +1,29 @@
+<div align="center">
+
 # nix-daml-sdk
-![Built with Daml](https://img.shields.io/badge/Daml-1D345D) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org) [![Obsidian](https://img.shields.io/badge/Obsidian-Systems-white)](https://obsidian.systems) 
+
+### The Daml toolchain, made reproducible.
+
+`daml` · `canton` · `dpm` · `vscode` — pinned, cached, one `nix-shell` away.
+
+![Built with Daml](https://img.shields.io/badge/Daml-1D345D) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org) [![Obsidian](https://img.shields.io/badge/Obsidian-Systems-white)](https://obsidian.systems) [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
+
+</div>
+
+```console
+$ nix-shell                  # pull the pinned toolchain (prebuilt, from the cache)
+
+[nix-shell]$ daml version    # daml, canton, and dpm are now on your PATH
+SDK 3.4.11
+```
 
 Reproducible [Nix](https://nixos.org/) packaging of the [Daml
-SDK](https://docs.daml.com) — the smart-contract toolchain, a matching
-[Canton](https://canton.network/) runtime, the Daml Package Manager (DPM), and
-a ready-to-go VS Code.
-
-Run `nix-shell` and you drop into a shell with `daml`, `canton`, and `dpm` on
-your `PATH`, plus an editor that already has the pinned Daml extension
-installed. The same derivations double as `buildInputs`, so you can compile
-your Daml project — and produce `.dar` files — hermetically and reproducibly in
-CI.
+SDK](https://docs.daml.com): the SDK toolchain, a matching
+[Canton](https://canton.network/) runtime, the Daml Package Manager (DPM), and a
+ready-to-go VS Code. `nix-shell` drops you into a shell with `daml`, `canton`,
+and `dpm` on your `PATH`, plus an editor with the pinned Daml extension. The same
+derivations double as `buildInputs`, so you can compile your Daml project — and
+produce `.dar` files — hermetically and reproducibly in CI.
 
 ## Why nix-daml-sdk?
 
@@ -201,3 +214,9 @@ build, or ship it, we'd love to hear from you.
 - Website — <https://obsidian.systems>
 - Blog — <https://blog.obsidian.systems>
 - GitHub — <https://github.com/obsidiansystems>
+
+## License
+
+nix-daml-sdk is released under the [BSD-3-Clause License](./LICENSE), © 2023–2026
+Obsidian Systems LLC. The Daml SDK, Canton, DPM, and the other tools it packages
+are distributed under their own upstream licenses.
