@@ -1,7 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
 , jdkVersion ? "jdk"
-, sdkVersion ? "3.4.10"
+, sdkVersion ? "3.4.11"
 , scribeVersion ? "0.1.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
 , cantonEnterprise ? false
@@ -58,7 +58,7 @@ in rec {
       pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
-  inherit pkgs;
+  inherit pkgs sdkVersion scribeVersion;
   shell = pkgs.mkShell {
     name = "daml-sdk";
     packages = [
