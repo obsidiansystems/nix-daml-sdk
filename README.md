@@ -1,6 +1,5 @@
 # nix-daml-sdk
-# ![Built with DAML](https://img.shields.io/badge/daml-1D345D?style=flat-square) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org)
-*Built and maintained by [Obsidian Systems](https://obsidian.systems).*
+![Built with Daml](https://img.shields.io/badge/Daml-1D345D) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org) [![Obsidian](https://img.shields.io/badge/Obsidian-Systems-white)](https://obsidian.systems) 
 
 Reproducible [Nix](https://nixos.org/) packaging of the [Daml
 SDK](https://docs.daml.com) — the smart-contract toolchain, a matching
