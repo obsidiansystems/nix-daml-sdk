@@ -4,7 +4,7 @@
 
 ### The Daml toolchain, made reproducible.
 
-`daml` · `canton` · `dpm` · `vscode` — pinned, cached, one `nix-shell` away.
+`daml` · `canton` · `dpm` · `vscode` - pinned and cached, one `nix-shell` away.
 
 ![Built with Daml](https://img.shields.io/badge/Daml-1D345D) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org) [![Obsidian](https://img.shields.io/badge/Obsidian-Systems-white)](https://obsidian.systems) [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 
