@@ -1,77 +1,199 @@
 # nix-daml-sdk
+# ![Built with DAML](https://img.shields.io/badge/daml-1D345D?style=flat-square) [![Built with Nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a)](https://nixos.org)
 
-Nix package and shell for the [daml-sdk](https://docs.daml.com/getting-started/installation.html).
+Reproducible [Nix](https://nixos.org/) packaging of the [Daml SDK](https://docs.daml.com) — the
+smart-contract toolchain, a matching [Canton](https://canton.network/) runtime, the Daml Package
+Manager (DPM), and a ready-to-go VS Code — built and maintained by
+[Obsidian Systems](https://obsidian.systems).
 
-Use `nix-shell` to enter the shell. Once inside, you can run [`daml` commands](https://docs.daml.com/tools/assistant.html).
+Run `nix-shell` and you drop into a shell with `daml`, `canton`, and `dpm` on your `PATH`, plus an
+editor that already has the pinned Daml extension installed. The same derivations double as
+`buildInputs`, so you can compile your Daml project — and produce `.dar` files — hermetically and
+reproducibly in CI.
 
-The `daml studio` command invokes vscode and tries to ensure that the daml extension has been installed. The provided nix-shell installs vscode and a pinned version of the daml extension. Other extensions can be added to shell.nix.
+## Why nix-daml-sdk?
 
-## Project Integration
+The upstream install path (`curl … | sh` from `get.daml.com`, then `daml install`) mutates a
+global `~/.daml`, isn't pinned, and is awkward to reproduce across a team or in CI. nix-daml-sdk
+trades that for a Nix-native workflow:
 
-nix-daml-sdk is designed can be integrated into an existing nix-based project or added to a daml project that doesn't currently use nix.
+- **Reproducible & pinned.** The SDK, Canton, DPM, JDK, and the VS Code Daml extension are all
+  pinned by hash, so every machine and every CI run gets identical tools — no global mutable
+  state, no "works on my machine."
+- **The whole stack, together.** One shell gives you the SDK, a Canton runtime that matches it,
+  DPM, the right JDK, and an editor with the Daml extension already wired up.
+- **Any version, one flag.** Switch SDK versions with `--argstr sdkVersion`; each supported
+  release is a small JSON pin you can add yourself.
+- **CI-friendly.** Build `.dar`s inside Nix's sandbox — no network, no global state, byte-for-byte
+  repeatable.
+- **Cached.** Obsidian publishes a [binary cache](#nix-binary-cache), so you download prebuilt
+  artifacts instead of compiling them.
+- **Composable.** Drop it into an existing Nix project, or use it to add Nix to a Daml project
+  that doesn't have it yet.
 
-### Creating a shell for your project
+## What you get
 
-You can import nix-daml-sdk into your shell.nix file, and include the daml sdk, vscode, and canton in your shell's `buildInputs`. For example:
+Importing this repo yields an attribute set of derivations:
+
+- **`sdk`** — the `daml` assistant and SDK toolchain (auto-install disabled; `daml` is wrapped with
+  a JDK on its `PATH`).
+- **`canton`** — a [Canton](https://canton.network/) runtime. Open-source by default; set
+  `cantonEnterprise = true` for the enterprise build (which you must supply yourself — see below).
+  Sets `CANTON_HOME` automatically.
+- **`dpm`** — the Daml Package Manager, Digital Asset's drop-in replacement for the now-deprecated
+  Daml Assistant.
+- **`vscode`** — VS Code preloaded with the Daml extension pinned to your SDK version. `daml studio`
+  launches it.
+- **`jdk`** — the JDK the toolchain runs on (selectable via `jdkVersion`).
+- **`scribe`** — optional (`enableScribe = true`); off by default and requires you to supply the
+  distribution.
+
+## Quick start
+
+```sh
+nix-shell
+```
+
+Inside the shell you can run any [`daml` command](https://docs.daml.com/tools/assistant.html)
+(`daml build`, `daml start`, …), use `canton` and `dpm`, and open the bundled editor with
+`daml studio`.
+
+Pick a specific SDK version and/or JDK:
+
+```sh
+nix-shell --argstr sdkVersion 2.8.0 --argstr jdkVersion jdk17
+```
+
+Other arguments accepted by `shell.nix` / `default.nix`: `cantonEnterprise` (use the enterprise
+Canton build), `enableScribe`, `vimMode` (adds the Vim extension to VS Code), and `extraPackages`
+(a function `pkgs: [ … ]` for adding more tools to the shell).
+
+### Supported versions
+
+Each supported release is pinned by a file in [`versions/`](./versions). Currently:
+
+```
+2.5.5  2.6.4  2.6.5  2.7.1  2.8.0
+3.3.0-snapshot.*  3.4.10  3.4.11
+```
+
+The default version lives in one place — `default.nix` — and `shell.nix` delegates to it. To add a
+release, drop a `versions/<version>.json` alongside the others with the relevant hashes (build
+once with a placeholder hash and copy the value Nix reports).
+
+## Project integration
+
+nix-daml-sdk can be added to an existing Nix-based project, or used to bring Nix to a Daml project
+that doesn't currently use it. Vendor this repo however you pin Nix dependencies — e.g.
+[niv](https://github.com/nmattia/niv),
+[nix-thunk](https://github.com/obsidiansystems/nix-thunk), a flake input, or a plain
+`fetchTarball`:
+
+```nix
+import (builtins.fetchTarball {
+  url = "https://github.com/obsidiansystems/nix-daml-sdk/archive/<rev>.tar.gz";
+  # sha256 = "…";   # fill in the hash Nix reports
+}) { sdkVersion = "3.4.11"; }
+```
+
+### A dev shell for your project
+
+Pull the SDK, Canton, DPM, and editor into your own `shell.nix`, alongside whatever else your
+project needs:
 
 ```nix
 {}:
 let
   pkgs = import ./nixpkgs {};
-  nix-daml-sdk = import ./nix/nix-daml-sdk {};
+  nix-daml-sdk = import ./nix-daml-sdk { sdkVersion = "3.4.11"; };
 in
   pkgs.mkShell {
     name = "daml-shell";
     buildInputs = [
-      pkgs.cabal-install
+      nix-daml-sdk.sdk      # the `daml` assistant + SDK
+      nix-daml-sdk.canton   # Canton runtime (sets CANTON_HOME)
+      nix-daml-sdk.dpm      # Daml Package Manager
+      nix-daml-sdk.vscode   # VS Code with the pinned Daml extension
+
+      pkgs.cabal-install    # add anything else your project needs
       pkgs.ghcid
-      nix-daml-sdk.sdk
-      nix-daml-sdk.vscode
-      nix-daml-sdk.canton
     ];
   }
 ```
 
+`nix-shell` now gives everyone on the team the same `daml`, `canton`, and `dpm`, and `daml studio`
+opens the bundled VS Code. To add more editor extensions, edit the `vscode` derivation in this
+repo (see `default.nix`).
+
 ### Building your project
 
-To build your daml nix project, you can import nix-daml-sdk and use the sdk, jdk, and canton fields that it provides as buildInputs in your own nix derivation. For example, the code below will build a daml project and produce a `.dar` file using nix.
+Use the `sdk` and `jdk` derivations as `buildInputs` to compile a `.dar` reproducibly. Because the
+build runs in Nix's sandbox, it's hermetic — no network access, no `~/.daml`:
 
 ```nix
-{ jdkVersion ? "jdk17"
-, sdkVersion ? "2.7.1"
+{ sdkVersion ? "3.4.11"
+, jdkVersion ? "jdk17"
 , pkgs ? import ./nixpkgs {}
 }:
 let
-  damlSdk = import ./nix-daml-sdk { inherit jdkVersion sdkVersion; };
+  nix-daml-sdk = import ./nix-daml-sdk { inherit sdkVersion jdkVersion; };
 in pkgs.stdenvNoCC.mkDerivation {
-    name = "My Daml Project";
-    src = pkgs.lib.cleanSource ./.;
-    buildInputs = [ damlSdk.jdk damlSdk.sdk ];
-    buildPhase = ''
-      mkdir dist
-      daml build -o dist.dar
-    '';
-    installPhase = ''
-      mkdir $out
-      cp dist.dar $out/
-    '';
-  }
+  name = "my-daml-project";
+  src = pkgs.lib.cleanSource ./.;
+  buildInputs = [ nix-daml-sdk.jdk nix-daml-sdk.sdk ];
+  buildPhase = "daml build -o my-project.dar";
+  installPhase = ''
+    mkdir -p $out
+    cp my-project.dar $out/
+  '';
+}
 ```
+
+`nix-build` produces the artifact at `result/my-project.dar`.
+
+### Enterprise Canton
+
+Canton Enterprise lives behind Digital Asset's Artifactory, so it can't be fetched automatically.
+With `cantonEnterprise = true`, Nix will ask you to add the matching tarball to your store (via
+`nix-store --add-fixed`); see `canton.nix` for the exact filename and hash it expects.
 
 ## Nix Binary Cache
 
-1. [Install Nix](https://nixos.org/nix/). If you already have Nix installed, make sure you have version 2.0 or higher. To check your current version, run nix-env --version.
+Obsidian publishes prebuilt artifacts to a public cache so you don't have to compile the toolchain
+yourself.
 
-2. Set up nix caches
+1. [Install Nix](https://nixos.org/nix/). If you already have Nix installed, make sure you have
+   version 2.0 or higher (`nix-env --version`).
+
+2. Set up the caches:
     1. If you are running NixOS, add this to `/etc/nixos/configuration.nix`:
         ```nix
         nix.binaryCaches = [ "s3://obsidian-open-source" ];
         nix.binaryCachePublicKeys = [ "obsidian-open-source:KP1UbL7OIibSjFo9/2tiHCYLm/gJMfy8Tim7+7P4o0I=" ];
         ```
         and rebuild your NixOS configuration (e.g. `sudo nixos-rebuild switch`).
-    2. If you are using another operating system or Linux distribution, ensure that these lines are present in your Nix configuration file (`/etc/nix/nix.conf` on most systems; [see full list](https://nixos.org/nix/manual/#sec-conf-file)):
+    2. On other systems, ensure these lines are present in your Nix configuration file
+       (`/etc/nix/nix.conf` on most systems;
+       [see full list](https://nixos.org/nix/manual/#sec-conf-file)):
         ```nix
         binary-caches = https://cache.nixos.org s3://obsidian-open-source
         binary-cache-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= obsidian-open-source:KP1UbL7OIibSjFo9/2tiHCYLm/gJMfy8Tim7+7P4o0I=
         binary-caches-parallel-connections = 40
         ```
+
+## About Obsidian Systems
+
+nix-daml-sdk is built and maintained by **[Obsidian Systems](https://obsidian.systems)** — *"a
+software consultancy specializing in building great products on technologies that promote quality
+and rapid iteration."* We're long-time stewards of open-source Nix and Haskell tooling — including
+[Obelisk](https://github.com/obsidiansystems/obelisk),
+[Reflex](https://reflex-frp.org/), and
+[nix-thunk](https://github.com/obsidiansystems/nix-thunk) — and we build production Daml and Canton
+applications.
+
+If you're working with Daml, Canton, or Nix and want a partner to help design, build, or ship it,
+we'd love to hear from you.
+
+- Website — <https://obsidian.systems>
+- Blog — <https://blog.obsidian.systems>
+- GitHub — <https://github.com/obsidiansystems>
