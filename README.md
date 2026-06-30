@@ -22,8 +22,8 @@ SDK](https://docs.daml.com): the SDK toolchain, a matching
 [Canton](https://canton.network/) runtime, the Daml Package Manager (DPM), and a
 ready-to-go VS Code. `nix-shell` drops you into a shell with `daml`, `canton`,
 and `dpm` on your `PATH`, plus an editor with the pinned Daml extension. The same
-derivations double as `buildInputs`, so you can compile your Daml project — and
-produce `.dar` files — hermetically and reproducibly in CI.
+derivations double as `buildInputs`, so you can compile your Daml project - and
+produce `.dar` files - hermetically and reproducibly in CI.
 
 ## Why nix-daml-sdk?
 
@@ -70,7 +70,7 @@ nix-shell
 ```
 
 Inside the shell you can run any [`daml` command](https://docs.daml.com/tools/assistant.html)
-(`daml build`, `daml start`, …), use `canton` and `dpm`, and open the bundled
+(`daml build`, `daml start`, ...), use `canton` and `dpm`, and open the bundled
 editor with `daml studio`.
 
 Pick a specific SDK version and/or JDK:
@@ -81,7 +81,7 @@ nix-shell --argstr sdkVersion 2.8.0 --argstr jdkVersion jdk17
 
 Other arguments accepted by `shell.nix` / `default.nix`: `cantonEnterprise`
 (use the enterprise Canton build), `enableScribe`, `vimMode` (adds the Vim
-extension to VS Code), and `extraPackages` (a function `pkgs: [ … ]` for adding
+extension to VS Code), and `extraPackages` (a function `pkgs: [ ... ]` for adding
 more tools to the shell).
 
 ### Supported versions
@@ -100,9 +100,9 @@ relevant hashes.
 
 nix-daml-sdk can be added to an existing Nix-based project, or used to bring
 Nix to a Daml project that doesn't currently use it. Vendor this repo however
-you pin Nix dependencies — e.g. [niv](https://github.com/nmattia/niv),
+you pin Nix dependencies (e.g. [niv](https://github.com/nmattia/niv),
 [nix-thunk](https://github.com/obsidiansystems/nix-thunk), a flake input, or a
-plain `fetchTarball`:
+plain `fetchTarball`):
 
 ```nix
 import (builtins.fetchTarball {
@@ -143,8 +143,8 @@ extensions, edit the `vscode` derivation in this repo (see `default.nix`).
 ### Building your project
 
 Use the `sdk` and `jdk` derivations as `buildInputs` to compile a `.dar`
-reproducibly. Because the build runs in Nix's sandbox, it's hermetic — no
-network access, no `~/.daml`:
+reproducibly. Because the build runs in Nix's sandbox, it's hermetic and doesn't
+require network access or `~/.daml`:
 
 ```nix
 { sdkVersion ? "3.4.11"
