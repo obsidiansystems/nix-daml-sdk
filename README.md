@@ -205,7 +205,7 @@ Systems](https://obsidian.systems)**. We provide frontier engineering for
 high-assurance systems. We're long-time stewards of open-source Nix and Haskell
 tooling, including [Obelisk](https://github.com/obsidiansystems/obelisk),
 [Reflex](https://reflex-frp.org/), and
-[nix-thunk](https://github.com/obsidiansystems/nix-thunk) — and we build
+[nix-thunk](https://github.com/obsidiansystems/nix-thunk) and we build
 production Daml and Canton applications.
 
 If you're working with Daml, Canton, or Nix and want a partner to help design,
