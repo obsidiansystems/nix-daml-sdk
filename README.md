@@ -211,9 +211,9 @@ production Daml and Canton applications.
 If you're working with Daml, Canton, or Nix and want a partner to help design,
 build, or ship it, we'd love to hear from you.
 
-- Website — <https://obsidian.systems>
-- Blog — <https://blog.obsidian.systems>
-- GitHub — <https://github.com/obsidiansystems>
+- Website - <https://obsidian.systems>
+- Blog - <https://blog.obsidian.systems>
+- GitHub - <https://github.com/obsidiansystems>
 
 ## License
 
