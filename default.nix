@@ -19,7 +19,7 @@ let
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       { name = "daml";
         publisher = "DigitalAssetHoldingsLLC";
-        version = sdkVersion;
+        version = sdkSpec.vscodeExtension.version or sdkVersion;
         sha256 = sdkSpec.vscodeExtension.sha256;
       }
     ] ++ pkgs.lib.optional vimMode vscodevim.vim ;
