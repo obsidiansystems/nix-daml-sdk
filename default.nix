@@ -61,6 +61,9 @@ in rec {
   inherit pkgs sdkVersion scribeVersion;
   shell = pkgs.mkShell {
     name = "daml-sdk";
+    shellHook = ''
+      export DAML_HOME="$HOME/.daml"
+    '';
     packages = [
       vscode
       canton
