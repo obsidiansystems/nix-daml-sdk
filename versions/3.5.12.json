@@ -1,0 +1,29 @@
+{
+  "jdk": "jdk21",
+  "vscodeExtension":
+  { "version": "3.5.3",
+    "sha256": "sha256-R8WsJBqwWuexoIolzUBHfSnRvgeBORQB26/fbsUZmtc="
+  },
+  "dpm":
+  { "version": "1.0.22",
+    "oci":
+    { "x86_64-linux": "116c47306d504e7f18bd0b7c7908b6e30c1c6b88ffde9f380507136a58400714",
+      "aarch64-linux": "5e7f88607c0800b263d12ea05acdc0b8352a4fe89ce2ee5f3cf91c34c4e1e5c3",
+      "x86_64-darwin": "5922b1d073511ec676f3adc98a93219c5582bc1c65bc6995f5199e2e0e6e8bff",
+      "aarch64-darwin": "e1ace1e24c8efafd527bfd60ab545769742588ca73860d01da09b1bfd29b2220"
+    }
+  },
+  "canton":
+  { "type": "open-source",
+    "version": "3.5.19",
+    "oci":
+    { "lib": "21525b4d07ba5cf16046b76a11bb9bd8d0afbdc75f5aff15f2c103eef674c872",
+      "LICENSE": "ea184a01b79992f88473e87b8b3183e0b7800253ff8724cfbe3b8fc148a0aa70"
+    }
+  },
+  "cantonEnterprise":
+  { "type": "enterprise",
+    "version": "3.5.19",
+    "sha256": ""
+  }
+}

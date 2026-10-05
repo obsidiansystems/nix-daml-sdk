@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , system ? builtins.currentSystem
 , version
 , dpmSpec
@@ -20,8 +21,19 @@ let
       };
     };
   dpmTarball = fetchTarball (dpmTarballs.${system} or (builtins.abort "There is currently no DPM tarball defined for ${system}."));
+
+  # The SDK tarball above bundles every SDK component (over 1GB for 3.5), of
+  # which we only keep bin/dpm.  Newer version pins instead give the digest of
+  # the dpm binary itself in DA's OCI registry, which is the same file.
+  useOci = dpmSpec ? oci;
+  fetchOciLayer = import ./oci.nix { inherit fetchurl; };
+  dpmBinary = fetchOciLayer {
+    repository = "components/dpm";
+    digest = dpmSpec.oci.${system} or (builtins.abort "There is currently no DPM binary defined for ${system}.");
+    name = "dpm-${dpmSpec.version}";
+  };
 in
-  stdenv.mkDerivation {
+  stdenv.mkDerivation ({
     inherit version;
 
     name = "dpm";
@@ -38,4 +50,13 @@ in
       homepage = "https://get.digitalasset.com/install";
       license = licenses.asl20;
     };
-  }
+  } // lib.optionalAttrs useOci {
+    src = null;
+    dontUnpack = true;
+    # Install the binary exactly as published (and pinned by its digest).
+    dontStrip = true;
+    buildPhase = ":";
+    installPhase = ''
+      install -D -m755 ${dpmBinary} $out/bin/dpm
+    '';
+  })
