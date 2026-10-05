@@ -89,12 +89,43 @@ more tools to the shell).
 Each supported release is pinned by a file in [`versions/`](./versions). For example:
 
 ```
-2.5.5  2.6.4  2.6.5  2.7.1  2.8.0
-3.3.0-snapshot.*  3.4.10  3.4.11
+2.5.5  2.6.4  2.6.5  2.7.1  2.8.0  2.10.4
+3.3.0-snapshot.*  3.4.10  3.4.11  3.5.12
 ```
 
 To add a release, add a `versions/<version>.json` alongside the others with the
 relevant hashes.
+
+#### SDK 3.5 and later
+
+From 3.5, Digital Asset distributes the SDK through DPM only. There is no
+`daml` assistant (`sdk` is `null`), and Canton is no longer attached to GitHub
+releases. Instead, each component is published to DA's public OCI registry,
+`europe-docker.pkg.dev/da-images/public`, and versioned independently. SDK
+3.5.12, for example, ships Canton 3.5.19, damlc 3.5.3 and DPM 1.0.22.
+
+Version pins for these releases give the component versions and the digests of
+their OCI layers instead of tarball hashes. A layer's digest is the sha256 of
+the blob, so it serves directly as the fetch hash (see [`oci.nix`](./oci.nix)).
+To find them for a new release `X`:
+
+1. Read the SDK manifest, which lists every component's version. It is the one
+   layer of the `linux/amd64` manifest in the index at
+   `https://europe-docker.pkg.dev/v2/da-images/public/sdk-manifests/open-source/manifests/X`.
+2. For Canton, take the digests of the `lib` and `LICENSE` layers of
+   `components/canton-open-source:<canton version>`.
+3. For DPM, take the digest of the `dpm` layer for each platform of
+   `components/dpm:<assistant version>`.
+4. The VS Code extension is versioned like damlc.
+
+A pin can also set `"jdk"` (e.g. `"jdk21"`) to choose the JDK its release runs
+on when `jdkVersion` isn't given. The 3.5 pins use JDK 21: nixpkgs' default
+`jdk` is JDK 19 in the pinned nixpkgs, which runs Canton 3.5 but is a
+short-term release that no longer receives updates, while JDK 21 is the newest
+long-term-support release available.
+
+Fetch manifests with `Accept: application/vnd.oci.image.index.v1+json` (or
+`...manifest.v1+json`); no authentication is needed.
 
 ## Project integration
 

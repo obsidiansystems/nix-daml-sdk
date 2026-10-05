@@ -1,6 +1,7 @@
 { vimMode ? false , extraPackages ? (_:[])
 , system ? builtins.currentSystem
-, jdkVersion ? "jdk"
+  # A version pin may name the JDK its release should run on by default.
+, jdkVersion ? sdkSpec.jdk or "jdk"
 , sdkVersion ? "3.4.11"
 , scribeVersion ? "0.1.0"
 , sdkSpec ? builtins.fromJSON(builtins.readFile (./versions + "/${sdkVersion}.json"))
@@ -36,7 +37,7 @@ let
     if builtins.hasAttr "dpm" sdkSpec
     then import ./dpm.nix {
       inherit system;
-      inherit (pkgs) lib stdenv;
+      inherit (pkgs) lib stdenv fetchurl;
       version = sdkVersion;
       dpmSpec = sdkSpec.dpm;
     }
