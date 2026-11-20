@@ -6,6 +6,10 @@
   },
   "dpm":
   { "version": "1.0.22",
+    "sdkBundle":
+    { "x86_64-linux": "sha256-rzyy8+Oi+Z6HM/YYOD9/fCv1j6Y0F5Ecf3PDT+abe2M=",
+      "aarch64-darwin": "sha256-wOikWrxo49SL1lix0jOLLwdIiSU1s7gygwVpQghPG/M="
+    },
     "oci":
     { "x86_64-linux": "116c47306d504e7f18bd0b7c7908b6e30c1c6b88ffde9f380507136a58400714",
       "aarch64-linux": "5e7f88607c0800b263d12ea05acdc0b8352a4fe89ce2ee5f3cf91c34c4e1e5c3",
