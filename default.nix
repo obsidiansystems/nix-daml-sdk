@@ -42,6 +42,18 @@ let
       dpmSpec = sdkSpec.dpm;
     }
     else null;
+  # From 3.5 there's no `daml` assistant; this is dpm with the release's SDK
+  # components preinstalled, which the shell uses in place of the bare dpm.
+  dpmSdk =
+    if sdkSpec ? dpm.sdkBundle
+    then import ./dpm-sdk.nix {
+      inherit system;
+      inherit (pkgs) lib stdenvNoCC fetchurl makeWrapper;
+      jdk = pkgs.${jdkVersion};
+      version = sdkVersion;
+      dpmSpec = sdkSpec.dpm;
+    }
+    else null;
   canton = import ./canton.nix {
     inherit pkgs jdkVersion;
     version = cantonVersion // { number = sdkVersion; };
@@ -52,21 +64,21 @@ let
       version = (import (./scribe-versions + "/${scribeVersion}.nix")) // { number = scribeVersion; };
     } else null;
 in rec {
-  inherit sdk canton scribe dpm;
+  inherit sdk canton scribe dpm dpmSdk;
   vscode = vscodeWithExtensions;
   jdk = pkgs.${jdkVersion};
   extra = [
       pkgs.gitFull
       pkgs.nodePackages.typescript-language-server
     ] ++ (extraPackages pkgs);
-  inherit pkgs sdkVersion scribeVersion;
+  inherit pkgs sdkSpec sdkVersion scribeVersion;
   shell = pkgs.mkShell {
     name = "daml-sdk";
     packages = [
       vscode
       canton
       sdk
-      dpm
+      (if dpmSdk != null then dpmSdk else dpm)
     ] ++ (pkgs.lib.optional (enableScribe) scribe)
       ++ extra;
   };

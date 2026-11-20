@@ -57,6 +57,10 @@ Importing this repo yields an attribute set of derivations:
   must supply yourself: see below). Sets `CANTON_HOME` automatically.
 - **`dpm`**: the Daml Package Manager, Digital Asset's drop-in replacement for
   the now-deprecated Daml Assistant.
+- **`dpmSdk`**: for SDK 3.5 and later, `dpm` with that release's SDK
+  components (damlc, Daml Script, codegen, Canton, ...) already installed in
+  the Nix store, so it works offline and without a `~/.dpm`. `null` for
+  earlier versions. The shell uses it in place of the bare `dpm`.
 - **`vscode`**: VS Code preloaded with the Daml extension pinned to your SDK
   version. `daml studio` launches it.
 - **`jdk`**: the JDK the toolchain runs on (selectable via `jdkVersion`).
@@ -117,6 +121,10 @@ To find them for a new release `X`:
 3. For DPM, take the digest of the `dpm` layer for each platform of
    `components/dpm:<assistant version>`.
 4. The VS Code extension is versioned like damlc.
+5. For the complete SDK (`dpmSdk`), give `dpm.sdkBundle.<system>` the hash of
+   the release's offline bundle, `dpm-X-<os>-<arch>.tar.gz` (the URL is in
+   [`dpm-sdk.nix`](./dpm-sdk.nix)). Leave it as `""` and Nix will report the
+   hash it got. Without `sdkBundle`, the pin still provides the bare `dpm`.
 
 A pin can also set `"jdk"` (e.g. `"jdk21"`) to choose the JDK its release runs
 on when `jdkVersion` isn't given. The 3.5 pins use JDK 21: nixpkgs' default
@@ -198,12 +206,49 @@ in pkgs.stdenvNoCC.mkDerivation {
 
 `nix-build` produces the artifact at `result/my-project.dar`.
 
+From SDK 3.5 there is no `daml` assistant, so build with `dpmSdk` instead. It
+already carries its JDK and SDK components. damlc needs a writable `HOME`,
+which Nix builds don't have by default:
+
+```nix
+{ pkgs ? import ./nixpkgs {} }:
+let
+  nix-daml-sdk = import ./nix-daml-sdk { sdkVersion = "3.5.12"; };
+in pkgs.stdenvNoCC.mkDerivation {
+  name = "my-daml-project";
+  src = pkgs.lib.cleanSource ./.;
+  nativeBuildInputs = [ nix-daml-sdk.dpmSdk ];
+  buildPhase = ''
+    export HOME=$TMPDIR
+    dpm build
+  '';
+  installPhase = ''
+    mkdir -p $out
+    cp .daml/dist/*.dar $out/
+  '';
+}
+```
+
 ### Enterprise Canton
 
 Canton Enterprise lives behind Digital Asset's Artifactory, so it can't be
 fetched automatically. With `cantonEnterprise = true`, Nix will ask you to add
 the matching tarball to your store (via `nix-store --add-fixed`); see
 `canton.nix` for the exact filename and hash it expects.
+
+## Testing
+
+The tests in [`tests/`](./tests/default.nix) are derivations, so they run in
+the Nix build sandbox: offline, and without touching your home directory.
+
+```sh
+nix-build tests --argstr sdkVersion 3.5.12            # all tests
+nix-build tests --argstr sdkVersion 3.5.12 -A ledger  # just one
+```
+
+They check that `canton` and `dpm` are the pinned versions and, where the pin
+provides `dpmSdk`, that it can create, build and test the default project
+template and run its Daml Script against a Canton sandbox.
 
 ## Nix Binary Cache
 
